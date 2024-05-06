@@ -1,6 +1,7 @@
+import { arrayType } from "@/types/arrayType";
 import { BoxType } from "@/types/boxType";
 
-export default function drawBoard(ctx: CanvasRenderingContext2D, boxSize: BoxType, padding: number, canvasHeight: number, canvasWidth: number) {
+export default function drawBoard(ctx: CanvasRenderingContext2D, boxSize: BoxType, padding: number, canvasHeight: number, canvasWidth: number,downTexts: arrayType,leftTexts: arrayType,upTexts: arrayType,rightTexts: arrayType) {
   ctx.strokeStyle = "red";
   ctx.lineWidth = 0.5;
   ctx.rect(
@@ -50,13 +51,39 @@ export default function drawBoard(ctx: CanvasRenderingContext2D, boxSize: BoxTyp
     ctx.stroke();
   }
 
+  leftTexts.reverse();
+  downTexts.reverse();
 
   //Corners
-  writeText(ctx, "JAIL", padding + (boxSize.height / 2), padding + (boxSize.height / 2), -45 - 180, "Arial", "black", 20);
-  writeText(ctx, "First\nBox", padding + (boxSize.height / 2), canvasHeight - (padding + (boxSize.height / 2)), 45, "Arial", "black", 20);
-  writeText(ctx, "Second\nBox", canvasWidth - (padding + (boxSize.height / 2)), padding + (boxSize.height / 2), 45 + 180, "Arial", "black", 20);
   writeText(ctx, "↖️\nGO", canvasWidth - (padding + (boxSize.height / 2)), canvasHeight - (padding + (boxSize.height / 2)), -45, "Arial", "black", 20);
+  writeText(ctx, "Crypto\nLocker", padding + (boxSize.height / 2), canvasHeight - (padding + (boxSize.height / 2)), 45, "Arial", "black", 20);
+  writeText(ctx, "No Internet", padding + (boxSize.height / 2), padding + (boxSize.height / 2), -45 - 180, "Arial", "black", 20);
+  writeText(ctx, "Kronos", canvasWidth - (padding + (boxSize.height / 2)), padding + (boxSize.height / 2), 45 + 180, "Arial", "black", 20);
 
+  rightTexts.forEach((text: string, i: number) => {
+    const xPos = canvasWidth - (padding + (boxSize.height / 2));
+    const yPos = boxSize.height + (i * boxSize.width) + (boxSize.width / 2) + padding;
+    writeText(ctx, text, xPos, yPos, 270, "Arial", "black", 15);
+  });
+
+
+  downTexts.forEach((text: string, i: number) => {
+    const xPos = canvasWidth-(boxSize.height + (i * boxSize.width) + (boxSize.width / 2) + padding);
+    const yPos = canvasHeight - (padding + (boxSize.height / 2));
+    writeText(ctx, text, xPos, yPos, 0, "Arial", "black", 15);
+  });
+
+  leftTexts.forEach((text: string, i: number) => {
+    const xPos = padding + (boxSize.height / 2);
+    const yPos = canvasHeight -(boxSize.height + (i * boxSize.width) + (boxSize.width / 2) + padding);
+    writeText(ctx, text, xPos, yPos, 90, "Arial", "black", 15);
+  });
+
+  upTexts.forEach((text: string, i: number) => {
+    const xPos = boxSize.height + (i * boxSize.width) + (boxSize.width / 2) + padding;
+    const yPos = padding + (boxSize.height / 2);
+    writeText(ctx, text, xPos, yPos, 180, "Arial", "black", 15);
+  });
 }
 
 function writeText(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, angle: number, font: string, color: string, size: number) {

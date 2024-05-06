@@ -1,6 +1,7 @@
 "use client"
 import { useRef, useEffect, useState } from 'react';
 import drawBoard from './drawBoard';
+import { arrayType } from '@/types/arrayType';
 
 const Canvas = () => {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -16,7 +17,12 @@ const Canvas = () => {
 
 	useEffect(() => {
 		if (context) {
-			drawBoard(context, { width: 75, height: 100 }, 10, 75*6 + 100*2 + 20, 75*6 + 100*2 + 20);
+			const sampleTexts: arrayType = ["1", "2", "3", "4", "5", "6"];
+			const boxSize = { width: 75, height: 100 };
+			const padding = 10;
+			const canvasWidth = boxSize.width * 6 + boxSize.height * 2 + 2*padding;
+			const canvasHeight = boxSize.width * 6 + boxSize.height * 2 + 2*padding;
+			drawBoard(context, boxSize, 10, canvasHeight, 75*6 + 100*2 + 20, sampleTexts, sampleTexts, sampleTexts, sampleTexts);
 		}
 	}, [context]);
 
