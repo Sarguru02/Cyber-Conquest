@@ -1,6 +1,6 @@
 import { BoxType } from "@/types/boxType";
 
-export default function drawBoard(ctx:CanvasRenderingContext2D, boxSize: BoxType , padding: number, canvasHeight: number, canvasWidth: number) {
+export default function drawBoard(ctx: CanvasRenderingContext2D, boxSize: BoxType, padding: number, canvasHeight: number, canvasWidth: number) {
   ctx.strokeStyle = "red";
   ctx.lineWidth = 0.5;
   ctx.rect(
@@ -49,5 +49,30 @@ export default function drawBoard(ctx:CanvasRenderingContext2D, boxSize: BoxType
     ctx.lineTo(padding + boxSize.height, y);
     ctx.stroke();
   }
+
+
+  //Corners
+  writeText(ctx, "JAIL", padding + (boxSize.height / 2), padding + (boxSize.height / 2), -45 - 180, "Arial", "black", 20);
+  writeText(ctx, "First\nBox", padding + (boxSize.height / 2), canvasHeight - (padding + (boxSize.height / 2)), 45, "Arial", "black", 20);
+  writeText(ctx, "Second\nBox", canvasWidth - (padding + (boxSize.height / 2)), padding + (boxSize.height / 2), 45 + 180, "Arial", "black", 20);
+  writeText(ctx, "↖️\nGO", canvasWidth - (padding + (boxSize.height / 2)), canvasHeight - (padding + (boxSize.height / 2)), -45, "Arial", "black", 20);
+
+}
+
+function writeText(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, angle: number, font: string, color: string, size: number) {
+  const angleInRadians = (angle * Math.PI) / 180;
+  ctx.translate(x, y);
+  ctx.rotate(angleInRadians);
+
+  const textarr = text.split('\n');
+  const lineHeight = 20;
+  ctx.font = `${size}px ${font}`;
+  ctx.fillStyle = color;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  textarr.forEach((line: string, i: number) => {
+    ctx.fillText(line, 0, i * lineHeight);
+  });
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
 }
 
