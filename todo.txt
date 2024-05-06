@@ -1,0 +1,9 @@
+change participants box to information board
+case 1: 
+	unbought property - current turn, next turn property details
+case 2: 
+	bought property by someone - current turn, next turn, property details with owner name, rent and start quiz button
+initial state: 
+	- total participant list
+case 3: 
+	chance, community chest, income tax 
