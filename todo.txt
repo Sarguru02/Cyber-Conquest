@@ -6,4 +6,12 @@ case 2:
 initial state: 
 	- total participant list
 case 3: 
-	chance, community chest, income tax 
+	chance, community chest, income tax - randomly chosen card content
+
+
+
+
+=============================
+Rules:
+==============================
+ - Every property name must be max 7 characters in length on each line and max 3 lines. (Handle programmatically, validation and rendering)
