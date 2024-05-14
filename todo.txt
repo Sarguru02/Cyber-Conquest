@@ -9,6 +9,14 @@ case 3:
 	chance, community chest, income tax - randomly chosen card content
 
 
+----------------------------
+Color pallete inspiration
+----------------------------
+https://mycolor.space/?hex=%23A4006F&sub=1
+https://mycolor.space/?hex=%23A47200&sub=1
+https://mycolor.space/?hex=%236FA400&sub=1
+https://mycolor.space/?hex=%230072A4&sub=1
+https://mycolor.space/?hex=%237600A4&sub=1 
 
 
 =============================
