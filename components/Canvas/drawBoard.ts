@@ -1,105 +1,171 @@
 import { arrayType } from "@/types/arrayType";
 import { BoxType } from "@/types/boxType";
 
-export default function drawBoard(ctx: CanvasRenderingContext2D, boxSize: BoxType, padding: number, canvasHeight: number, canvasWidth: number,downTexts: arrayType,leftTexts: arrayType,upTexts: arrayType,rightTexts: arrayType) {
-  ctx.strokeStyle = "red";
-  ctx.lineWidth = 0.5;
-  ctx.rect(
-    padding,
-    padding,
-    canvasWidth - 2 * padding,
-    canvasHeight - 2 * padding,
-  );
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(padding, padding + boxSize.height);
-  ctx.lineTo(canvasWidth - padding, padding + boxSize.height);
-  ctx.moveTo(padding + boxSize.height, padding);
-  ctx.lineTo(padding + boxSize.height, canvasHeight - padding);
-  ctx.moveTo(canvasWidth - padding - boxSize.height, padding);
-  ctx.lineTo(canvasWidth - padding - boxSize.height, canvasHeight - padding);
-  ctx.moveTo(padding, canvasHeight - (padding + boxSize.height));
-  ctx.lineTo(canvasWidth - padding, canvasHeight - (padding + boxSize.height));
-  ctx.stroke();
+export class Board {
+	ctx: CanvasRenderingContext2D;
+	padding: number;
+	height: number;
+	width: number;
+	boxSize: BoxType;
+	uptexts: arrayType;
+	downtexts: arrayType;
+	lefttexts: arrayType;
+	righttexts: arrayType;
+	boardWidth: number;
+	boardHeight: number;
+	centerPoints: Array<{ x: number, y: number }>;
 
-  for (let i = 1; i < 6; i++) {
-    ctx.beginPath();
-    const x = boxSize.height + padding + i * boxSize.width;
-    ctx.moveTo(x, padding);
-    ctx.lineTo(x, padding + boxSize.height);
-    ctx.stroke();
-  }
-  for (let i = 1; i < 6; i++) {
-    ctx.beginPath();
-    const x = boxSize.height + padding + i * boxSize.width;
-    ctx.moveTo(x, canvasHeight - padding);
-    ctx.lineTo(x, canvasHeight - (padding + boxSize.height));
-    ctx.stroke();
-  }
-  for (let i = 1; i < 6; i++) {
-    ctx.beginPath();
-    const y = boxSize.height + padding + i * boxSize.width;
-    ctx.moveTo(canvasHeight - padding, y);
-    ctx.lineTo(canvasHeight - (padding + boxSize.height), y);
-    ctx.stroke();
-  }
-  for (let i = 1; i < 6; i++) {
-    ctx.beginPath();
-    const y = boxSize.height + padding + i * boxSize.width;
-    ctx.moveTo(padding, y);
-    ctx.lineTo(padding + boxSize.height, y);
-    ctx.stroke();
-  }
-
-  leftTexts.reverse();
-  downTexts.reverse();
-
-  //Corners
-  writeText(ctx, "↖️\nGO", canvasWidth - (padding + (boxSize.height / 2)), canvasHeight - (padding + (boxSize.height / 2)), -45, "Arial", "black", 20);
-  writeText(ctx, "Crypto\nLocker", padding + (boxSize.height / 2), canvasHeight - (padding + (boxSize.height / 2)), 45, "Arial", "black", 20);
-  writeText(ctx, "No Internet", padding + (boxSize.height / 2), padding + (boxSize.height / 2), -45 - 180, "Arial", "black", 20);
-  writeText(ctx, "Kronos", canvasWidth - (padding + (boxSize.height / 2)), padding + (boxSize.height / 2), 45 + 180, "Arial", "black", 20);
-
-  rightTexts.forEach((text: string, i: number) => {
-    const xPos = canvasWidth - (padding + (boxSize.height / 2));
-    const yPos = boxSize.height + (i * boxSize.width) + (boxSize.width / 2) + padding;
-    writeText(ctx, text, xPos, yPos, 270, "Arial", "black", 15);
-  });
+	constructor(ctx: CanvasRenderingContext2D, padding: number, canvasHeight: number, canvasWidth: number, boxSize: BoxType, downTexts: arrayType, leftTexts: arrayType, upTexts: arrayType, rightTexts: arrayType) {
+		this.ctx = ctx;
+		this.padding = padding;
+		this.height = canvasHeight;
+		this.width = canvasWidth;
+		this.boxSize = boxSize;
+		this.uptexts = upTexts;
+		this.downtexts = downTexts;
+		this.lefttexts = leftTexts;
+		this.righttexts = rightTexts;
+		this.boardWidth = canvasWidth - padding;
+		this.boardHeight = canvasHeight - padding;
+		this.centerPoints = [{ x: (this.boardWidth - (this.boxSize.height / 2)), y: (this.boardHeight - this.boxSize.height / 2) }];
+	}
 
 
-  downTexts.forEach((text: string, i: number) => {
-    const xPos = canvasWidth-(boxSize.height + (i * boxSize.width) + (boxSize.width / 2) + padding);
-    const yPos = canvasHeight - (padding + (boxSize.height / 2));
-    writeText(ctx, text, xPos, yPos, 0, "Arial", "black", 15);
-  });
+	writeText(text: string, x: number, y: number, angle: number, font: string, color: string, size: number) {
+		const angleInRadians = (angle * Math.PI) / 180;
+		this.ctx.translate(x, y);
+		this.ctx.rotate(angleInRadians);
 
-  leftTexts.forEach((text: string, i: number) => {
-    const xPos = padding + (boxSize.height / 2);
-    const yPos = canvasHeight -(boxSize.height + (i * boxSize.width) + (boxSize.width / 2) + padding);
-    writeText(ctx, text, xPos, yPos, 90, "Arial", "black", 15);
-  });
+		const textarr = text.split('\n');
+		const lineHeight = 20;
+		this.ctx.font = `${size}px ${font}`;
+		this.ctx.fillStyle = color;
+		this.ctx.textAlign = "center";
+		this.ctx.textBaseline = "middle";
+		textarr.forEach((line: string, i: number) => {
+			this.ctx.fillText(line, 0, i * lineHeight);
+		});
+		this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+	}
 
-  upTexts.forEach((text: string, i: number) => {
-    const xPos = boxSize.height + (i * boxSize.width) + (boxSize.width / 2) + padding;
-    const yPos = padding + (boxSize.height / 2);
-    writeText(ctx, text, xPos, yPos, 180, "Arial", "black", 15);
-  });
+
+	fromStartX(x: number) {
+		return this.padding + x;
+	}
+
+	fromEndX(x: number) {
+		return this.width - (this.padding + x);
+	}
+
+
+	fromStartY(y: number) {
+		return this.padding + y;
+	}
+
+	fromEndY(y: number) {
+		return this.height - (this.padding + y);
+	}
+
+
+	getCenterPoints() {
+    const arr = [];
+    arr.push({
+      x: this.fromEndX(this.boxSize.height / 2),
+      y: this.fromEndY(this.boxSize.height / 2),
+      width: this.boxSize.height,
+      height: this.boxSize.height,
+      text: "GO",
+      angle: (-45),
+    });
+    for (let j = 0; j < 6; j++) {
+      arr.push({
+        x: this.fromEndX(
+          this.boxSize.height + this.boxSize.width * j + this.boxSize.width / 2,
+        ),
+        y: this.fromEndY(this.boxSize.height / 2),
+        width: this.boxSize.width,
+        height: this.boxSize.height,
+        text: this.downtexts[j],
+        angle: (0),
+      });
+    }
+    arr.push({
+      x: this.fromStartX(this.boxSize.height / 2),
+      y: this.fromEndY(this.boxSize.height / 2),
+      width: this.boxSize.height,
+      height: this.boxSize.height,
+      text: "Crypto\nLocker",
+      angle: (45),
+    });
+    for (let j = 0; j < 6; j++) {
+      arr.push({
+        x: this.fromStartX(this.boxSize.height / 2),
+        y: this.fromEndY(
+          this.boxSize.height + this.boxSize.width * j + this.boxSize.width / 2,
+        ),
+        width: this.boxSize.height,
+        height: this.boxSize.width,
+        text: this.lefttexts[j],
+        angle: (90),
+      });
+    }
+    arr.push({
+      x: this.fromStartX(this.boxSize.height / 2),
+      y: this.fromStartY(this.boxSize.height / 2),
+      width: this.boxSize.height,
+      height: this.boxSize.height,
+      text: "No\nInternet",
+      angle: (135),
+    });
+
+    for (let j = 0; j < 6; j++) {
+      arr.push({
+        x: this.fromStartX(
+          this.boxSize.height + this.boxSize.width * j + this.boxSize.width / 2,
+        ),
+        y: this.fromStartY(this.boxSize.height / 2),
+        width: this.boxSize.width,
+        height: this.boxSize.height,
+        text: this.uptexts[j],
+        angle: (180),
+      });
+    }
+    arr.push({
+      x: this.fromEndX(this.boxSize.height / 2),
+      y: this.fromStartY(this.boxSize.height / 2),
+      width: this.boxSize.height,
+      height: this.boxSize.height,
+      text: "Kronos",
+      angle: (-135),
+    });
+    for (let j = 0; j < 6; j++) {
+      arr.push({
+        x: this.fromEndX(this.boxSize.height / 2),
+        y: this.fromStartY(
+          this.boxSize.height + this.boxSize.width * j + this.boxSize.width / 2,
+        ),
+        width: this.boxSize.height,
+        height: this.boxSize.width,
+        text: this.righttexts[j],
+        angle: (-90),
+      });
+    }
+		return arr;
+	}
+
+	drawBoard() {
+		const centres = this.getCenterPoints();
+		centres.forEach(a => {
+			this.strokeFromCenter(a.x, a.y, a.width, a.height);
+			this.writeText(a.text, a.x, a.y, a.angle, "Arial", "black", 12);
+		})
+	}
+
+	strokeFromCenter(x: number, y: number, width: number, height: number) {
+		this.ctx.strokeRect(x - width / 2, y - height / 2, width, height);
+	}
+
+	add_player() {
+
+	}
 }
-
-function writeText(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, angle: number, font: string, color: string, size: number) {
-  const angleInRadians = (angle * Math.PI) / 180;
-  ctx.translate(x, y);
-  ctx.rotate(angleInRadians);
-
-  const textarr = text.split('\n');
-  const lineHeight = 20;
-  ctx.font = `${size}px ${font}`;
-  ctx.fillStyle = color;
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  textarr.forEach((line: string, i: number) => {
-    ctx.fillText(line, 0, i * lineHeight);
-  });
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
-}
-
