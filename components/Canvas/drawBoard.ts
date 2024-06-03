@@ -2,7 +2,6 @@ import { arrayType } from "@/types/arrayType";
 import { BoxType, pointType } from "@/types/boxType";
 
 export class Board {
-	ctx: CanvasRenderingContext2D;
 	padding: number;
 	height: number;
 	width: number;
@@ -11,13 +10,10 @@ export class Board {
 	downtexts: arrayType;
 	lefttexts: arrayType;
 	righttexts: arrayType;
-	boardWidth: number;
-	boardHeight: number;
 	players: Array<Player> = [];
-	centerPoints:Array<pointType> = [];
+	centerPoints: Array<pointType> = [];
 
-	constructor(ctx: CanvasRenderingContext2D, padding: number, canvasHeight: number, canvasWidth: number, boxSize: BoxType, downTexts: arrayType, leftTexts: arrayType, upTexts: arrayType, rightTexts: arrayType) {
-		this.ctx = ctx;
+	constructor( padding: number, canvasHeight: number, canvasWidth: number, boxSize: BoxType, downTexts: arrayType, leftTexts: arrayType, upTexts: arrayType, rightTexts: arrayType) {
 		this.padding = padding;
 		this.height = canvasHeight;
 		this.width = canvasWidth;
@@ -26,28 +22,26 @@ export class Board {
 		this.downtexts = downTexts;
 		this.lefttexts = leftTexts;
 		this.righttexts = rightTexts;
-		this.boardWidth = canvasWidth - padding;
-		this.boardHeight = canvasHeight - padding;
 		this.centerPoints = [];
 		this.players = [];
 	}
 
 
-	writeText(text: string, x: number, y: number, angle: number, font: string, color: string, size: number) {
+	writeText(ctx: CanvasRenderingContext2D,text: string, x: number, y: number, angle: number, font: string, color: string, size: number) {
 		const angleInRadians = (angle * Math.PI) / 180;
-		this.ctx.translate(x, y);
-		this.ctx.rotate(angleInRadians);
+		ctx.translate(x, y);
+		ctx.rotate(angleInRadians);
 
 		const textarr = text.split('\n');
 		const lineHeight = 20;
-		this.ctx.font = `${size}px ${font}`;
-		this.ctx.fillStyle = color;
-		this.ctx.textAlign = "center";
-		this.ctx.textBaseline = "middle";
+		ctx.font = `${size}px ${font}`;
+		ctx.fillStyle = color;
+		ctx.textAlign = "center";
+		ctx.textBaseline = "middle";
 		textarr.forEach((line: string, i: number) => {
-			this.ctx.fillText(line, 0, i * lineHeight);
+			ctx.fillText(line, 0, i * lineHeight);
 		});
-		this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
 	}
 
 
@@ -165,17 +159,17 @@ export class Board {
 		this.centerPoints = arr;
 	}
 
-	drawBoard() {
+	drawBoard(ctx: CanvasRenderingContext2D) {
 		this.getCenterPoints();
-		this.players.forEach(a => a.draw());
+		this.players.forEach(a => a.draw(ctx));
 		this.centerPoints.forEach(a => {
-			this.strokeFromCenter(a.x, a.y, a.width, a.height);
-			this.writeText(a.text, a.x, a.y, a.angle, "Arial", "black", 12);
+			this.strokeFromCenter(ctx,a.x, a.y, a.width, a.height);
+			this.writeText(ctx,a.text, a.x, a.y, a.angle, "Arial", "black", 12);
 		})
 	}
 
-	strokeFromCenter(x: number, y: number, width: number, height: number) {
-		this.ctx.strokeRect(x - width / 2, y - height / 2, width, height);
+	strokeFromCenter(ctx: CanvasRenderingContext2D,x: number, y: number, width: number, height: number) {
+		ctx.strokeRect(x - width / 2, y - height / 2, width, height);
 	}
 	add_player(color: string) {
 		// Implementation for adding a player can be added here.
@@ -191,64 +185,53 @@ export class Player {
 	color: string;
 	x: number;
 	y: number;
+	iterator: number;
 	constructor(game: Board, color: string) {
 		this.board = game;
 		this.position = 0;
 		this.color = color;
 		this.x = this.board.centerPoints[this.position].x;
 		this.y = this.board.centerPoints[this.position].y;
+		this.iterator = 0;
 	}
 
-	draw() {
-		this.board.ctx.fillStyle = this.color;
-		this.board.ctx.beginPath();
-		this.board.ctx.arc(this.x, this.y, 10, 0, Math.PI * 2);
-		this.board.ctx.fill();
+	draw(ctx: CanvasRenderingContext2D) {
+		ctx.fillStyle = this.color;
+		ctx.beginPath();
+		ctx.arc(this.x, this.y, 10, 0, Math.PI * 2);
+		ctx.fill();
 	}
 
-	update() {
-		var finalX = this.board.centerPoints[(this.position + 1) % 28].x;
-		var finalY = this.board.centerPoints[(this.position + 1) % 28].y;
-		if (this.x !== finalX) {
-			var dx = finalX - this.x;
-			if (Math.abs(dx) > 1) {
-				this.x += dx / (10 * 5);
-			} else {
-				this.x = finalX;
-			}
-		} else {
-			if (this.y !== finalY) {
-				var dy = finalY - this.y;
-				if (Math.abs(dy) > 1) {
-					this.y += dy / (10 * 5);
-				} else {
-					this.y = finalY;
-				}
-			} else {
-				this.x = finalX;
-				this.y = finalY;
-				return true;
-			}
-		}
-		return false;
-	}
+  update(n: number) {
+    const path = this.board.centerPoints;
+    const targetPoint = path[(this.position + 1) % 28];
+    const dx = targetPoint.x - this.x;
+    const dy = targetPoint.y - this.y;
 
-	moveOne() {
-		const width = this.board.boardWidth;
-		const height = this.board.boardHeight;
-		this.board.ctx.clearRect(0, 0, width, height);
-		this.board.drawBoard();
-		console.log(this.position, this.x, this.y);
-		if (!this.update()) {
-			requestAnimationFrame(this.moveOne.bind(this));
-		}
-	}
+    this.x += dx / 20; // Adjust the divisor to control the speed
+    this.y += dy / 20;
 
-	move(n: number) {
-		n = n - 1;
-		while (this.position !== n) {
-			this.moveOne();
-			this.position = (this.position + 1) % 28;
-		}
-	}
+    if (Math.abs(dx) < 10 && Math.abs(dy) < 10 && this.iterator <= n) {
+      this.x = targetPoint.x;
+      this.y = targetPoint.y;
+      this.position = (this.position + 1) % 28;
+      this.iterator += 1;
+    }
+    return this.iterator === n;
+  }
+
+
+  move(ctx: CanvasRenderingContext2D,n: number) {
+    const animateFrame = () => {
+      if (!this.update(n)) {
+        requestAnimationFrame(() => animateFrame());
+      }
+      ctx.clearRect(0, 0, this.board.width, this.board.height);
+      this.board.drawBoard(ctx);
+      if (this.iterator === n) {
+        this.iterator = 0;
+      }
+    };
+    animateFrame();
+  }
 }
