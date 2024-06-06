@@ -1,9 +1,9 @@
-import Board from "@/components/Board/Board";
+import BoardGame from "@/components/Board/BoardGame";
 
 export default function Home() {
   return (
     <main>
-      <Board />
+      <BoardGame />
     </main>
   );
 }

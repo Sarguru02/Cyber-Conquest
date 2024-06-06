@@ -1,4 +1,7 @@
-import React from "react";
+'use client'
+
+import { useState } from "react";
+import Connection from "./Connection";
 
 /**
  * Look and feel like administrator panel
@@ -10,8 +13,17 @@ import React from "react";
  *
  */
 
+
 const Entry = () => {
-  return <div>Entry</div>;
+	const [name, setName] = useState('');
+	const [render, setRender] = useState(false);
+	return (
+		<>
+			<input type="text" placeholder="Enter your name" onChange={e => setName(e.target.value)}/>
+			<button onClick={() => setRender(true)}>Join</button>
+			{render && <Connection name={name} type="Player"/>}
+		</>
+	)
 };
 
 export default Entry;

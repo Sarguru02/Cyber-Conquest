@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from "react";
 import { Board } from "../Canvas/drawBoard";
-import useCanvas from "./useCanvas";
+import useCanvas from "@/hooks/useCanvas";
 import { arrayType } from "@/types/arrayType";
 import AsidePanel from "../AsidePanel/AsidePanel";
 
