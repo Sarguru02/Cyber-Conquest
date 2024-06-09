@@ -1,6 +1,7 @@
 import CreateGame from "./createGame";
 import JoinGame from "./joinGame";
 import "./styles.css"
+import JoinCreateTab from "./tabs";
 import TabsDemo from "./test/page";
 
 export default function Home() {
@@ -16,7 +17,7 @@ export default function Home() {
 				<li>Board - /game</li>
 				<li>Participant Entry - /entry</li>
 			</ol>
-			<TabsDemo />
+			<JoinCreateTab />
 		</main>
 	);
 }
