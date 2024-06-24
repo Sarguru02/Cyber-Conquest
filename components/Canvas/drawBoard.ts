@@ -164,7 +164,7 @@ export class Board {
 		this.players.forEach(a => a.draw(ctx));
 		this.centerPoints.forEach(a => {
 			this.strokeFromCenter(ctx,a.x, a.y, a.width, a.height);
-			this.writeText(ctx,a.text, a.x, a.y, a.angle, "Arial", "black", 12);
+			this.writeText(ctx,a.text, a.x, a.y, a.angle, "Arial", "white", 12);
 		})
 	}
 

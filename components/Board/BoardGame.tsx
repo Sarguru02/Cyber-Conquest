@@ -16,6 +16,7 @@ const BoardGame = () => {
 
 	function draw(ctx: CanvasRenderingContext2D) {
 		if (board) {
+			ctx.strokeStyle = "white";
 			board.drawBoard(ctx);
 		}
 	}
