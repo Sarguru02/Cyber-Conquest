@@ -22,9 +22,16 @@ export default function JoinGame() {
 	}, [lastJsonMessage])
 
 
+	function join() {
+		sendJsonMessage({ type: 'join', params: { code: key } })
+		router.push("/player");
+		return
+	}
+
+
 	return (<div className="w-[400px] h-screen flex flex-col align-center justify-center">
 		<Input value={key} onChange={e => setKey(() => e.target.value)} />
-		<Button onClick={() => sendJsonMessage({type: 'join', params: {code: key}})}>Join</Button>
-		<Loading className="h-10 w-10"/>
+		<Button onClick={() => join()}>Join</Button>
+		<Loading className="h-10 w-10" />
 	</div>)
 }

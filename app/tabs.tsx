@@ -31,8 +31,8 @@ export default function JoinCreateTab() {
 		router.push('/create');
 	}
 
-	function joinGame(){
-		socket?.updateQueryParams({type: 'player', name});
+	function joinGame() {
+		socket?.updateQueryParams({ type: 'player', name });
 		socket?.connect();
 		router.push('/join')
 	}
@@ -54,7 +54,7 @@ export default function JoinCreateTab() {
 					<CardContent className="space-y-2">
 						<div className="space-y-1">
 							<Label htmlFor="name">Name</Label>
-							<Input id="name" onChange={e => setName(() => e.target.value)}/>
+							<Input id="name" onChange={e => setName(() => e.target.value)} />
 						</div>
 					</CardContent>
 					<CardFooter>
@@ -73,7 +73,7 @@ export default function JoinCreateTab() {
 					<CardContent className="space-y-2">
 						<div className="space-y-1">
 							<Label htmlFor="name">Name</Label>
-							<Input id="name" onChange={e => setName(() => e.target.value)}/>
+							<Input id="name" onChange={e => setName(() => e.target.value)} />
 						</div>
 					</CardContent>
 					<CardFooter>
