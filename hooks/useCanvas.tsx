@@ -7,11 +7,11 @@ type CanvasProps = {
 }
 
 const useCanvas = (draw: (ctx: CanvasRenderingContext2D) => void, options:CanvasProps = { width: 500, height: 500 }) => {
-	const canvasRef = useRef(null);
+	const canvasRef = useRef<HTMLCanvasElement>(null);
 
 	useEffect(() => {
-		const canvas = canvasRef.current;
-		const context = canvas.getContext("2d");
+		const canvas = canvasRef.current!;
+		const context = canvas.getContext("2d")!;
 		canvas.width = options.width;
 		canvas.height = options.height;
 		draw(context);

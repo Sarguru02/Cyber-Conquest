@@ -24,6 +24,7 @@ const useWebSocket = (url: string, options: WebSocketOptions = {}): WebSocketHoo
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [lastMessage, setLastMessage] = useState<string | null>(null);
   const [lastJsonMessage, setLastJsonMessage] = useState<any>(null);
+  const [messageQueue, setMessageQueue] = useState<any[]>([]);
 
   useEffect(() => {
     if (isConnected) {
@@ -60,6 +61,39 @@ const useWebSocket = (url: string, options: WebSocketOptions = {}): WebSocketHoo
     }
   }, [isConnected, queryParams]); // Adding queryParams as a dependency
 
+useEffect(() => {
+    // Your existing useEffect hook...
+
+    if (socket && socket.readyState === WebSocket.OPEN && messageQueue.length > 0) {
+      // Send queued messages
+      messageQueue.forEach((queuedMessage) => {
+        if (typeof queuedMessage === 'string') {
+          socket.send(queuedMessage);
+        } else {
+          socket.send(JSON.stringify(queuedMessage));
+        }
+      });
+      setMessageQueue([]); // Clear the message queue
+    }
+  }, [socket, messageQueue]);
+
+  const sendMessage = (message: string) => {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.send(message);
+    } else {
+      console.warn('WebSocket connection is not open. Queuing message...');
+      setMessageQueue(prevQueue => [...prevQueue, message]);
+    }
+  };
+
+  const sendJsonMessage = (message: any) => {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify(message));
+    } else {
+      console.warn('WebSocket connection is not open. Queuing message...');
+      setMessageQueue(prevQueue => [...prevQueue, message]);
+    }
+  };
   const connect = () => {
     setIsConnected(true);
   };
@@ -68,22 +102,22 @@ const useWebSocket = (url: string, options: WebSocketOptions = {}): WebSocketHoo
     setIsConnected(false);
   };
 
-  const sendMessage = (message: string) => {
-    if (socket && socket.readyState === WebSocket.OPEN) {
-      socket.send(message);
-    } else {
-      console.error('WebSocket connection is not open.');
-    }
-  };
-
-
-	const sendJsonMessage = (message: any) => {
-		if(socket && socket.readyState === WebSocket.OPEN){
-			socket.send(JSON.stringify(message));
-		} else {
-			console.error("WebSocket connection is not open.");
-		}
-	}
+ //  const sendMessage = (message: string) => {
+ //    if (socket && socket.readyState === WebSocket.OPEN) {
+ //      socket.send(message);
+ //    } else {
+ //      console.error('WebSocket connection is not open.');
+ //    }
+ //  };
+	//
+	//
+	// const sendJsonMessage = (message: any) => {
+	// 	if(socket && socket.readyState === WebSocket.OPEN){
+	// 		socket.send(JSON.stringify(message));
+	// 	} else {
+	// 		console.error("WebSocket connection is not open.");
+	// 	}
+	// }
 
   const updateQueryParams = (newQueryParams: Record<string, string>) => {
     setQueryParams(newQueryParams);
