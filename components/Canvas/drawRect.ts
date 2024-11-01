@@ -26,18 +26,27 @@
 //      ctx.fillText(text, 0, 0);
 //      ctx.restore(); // Restore the previous transformation state
 //
-export const drawRect = (ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, angle: number = 0, color: string = 'red', name: string = 'rectangle') => {
-	ctx.save();
-	ctx.translate(x + width / 2, y + height / 2);
-	ctx.rotate(angle);
-	console.log("x and y", x, y)
-	ctx.fillStyle = color;
-	ctx.fillRect(-width / 2, -height / 2, width, height);
-	ctx.font = '20px Arial';
-	ctx.fillStyle = 'black';
-	// center the text in the rectangle
-	ctx.textAlign = 'center';
-	ctx.textBaseline = 'middle';
-	ctx.fillText(name, 0, 0);
-	ctx.restore();
+export const drawRect = (
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  angle: number = 0,
+  color: string = "red",
+  name: string = "rectangle",
+) => {
+  ctx.save();
+  ctx.translate(x + width / 2, y + height / 2);
+  ctx.rotate(angle);
+  console.log("x and y", x, y);
+  ctx.fillStyle = color;
+  ctx.fillRect(-width / 2, -height / 2, width, height);
+  ctx.font = "20px Arial";
+  ctx.fillStyle = "black";
+  // center the text in the rectangle
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(name, 0, 0);
+  ctx.restore();
 };

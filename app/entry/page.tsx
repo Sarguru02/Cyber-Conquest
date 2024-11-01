@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useState } from "react";
 import Connection from "./Connection";
@@ -13,17 +13,20 @@ import Connection from "./Connection";
  *
  */
 
-
 const Entry = () => {
-	const [name, setName] = useState('');
-	const [render, setRender] = useState(false);
-	return (
-		<>
-			<input type="text" placeholder="Enter your name" onChange={e => setName(e.target.value)}/>
-			<button onClick={() => setRender(true)}>Join</button>
-			{render && <Connection name={name} type="Player"/>}
-		</>
-	)
+  const [name, setName] = useState("");
+  const [render, setRender] = useState(false);
+  return (
+    <>
+      <input
+        type="text"
+        placeholder="Enter your name"
+        onChange={(e) => setName(e.target.value)}
+      />
+      <button onClick={() => setRender(true)}>Join</button>
+      {render && <Connection name={name} type="Player" />}
+    </>
+  );
 };
 
 export default Entry;
