@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String      @id @default(uuid())
+  provider   String
+  email      String      @unique
+  name       String
+  games      Game[]      @relation("HostedGames")
+  gameStates GameState[] @relation("UserGameStates")
+}
+
+model Game {
+  id         String      @id @default(uuid())
+  userUserId String?
+  hostId     String
+  host       User        @relation("HostedGames", fields: [hostId], references: [id])
+  players    GameState[] @relation("GamePlayers")
+}
+
+model GameState {
+  id         Int     @id @default(autoincrement())
+  playerId   String
+  gameId     String
+  game       Game    @relation("GamePlayers", fields: [gameId], references: [id])
+  player     User    @relation("UserGameStates", fields: [playerId], references: [id])
+  position   Int     @default(0)
+  balance    Float   @default(1500.0)
+  properties Json
+  isTurn     Boolean @default(false)
+  inJail     Boolean @default(false)
+}

@@ -1,7 +1,3 @@
-import { clerkMiddleware } from "@clerk/nextjs/server";
+export { default } from "next-auth/middleware"
 
-export default clerkMiddleware();
-
-export const config = {
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
-};
+export const config = { matcher: ["/dashboard"] }

@@ -1,6 +1,6 @@
 "use client";
 /*
- * This hook code was given by ChatGPT, if modification needs to be done  please contact Sarguru or Naveen
+ * This hook code was given by ChatGPT, if modification needs to be done please contact Sarguru or Naveen
  */
 
 import { useState, useEffect } from "react";

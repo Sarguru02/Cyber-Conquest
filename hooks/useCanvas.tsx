@@ -5,6 +5,13 @@ type CanvasProps = {
   width: number;
   height: number;
 };
+/**
+ * This hook is used to create a canvas and use it properly I suppose. 
+ *
+ * Parameters : draw function, 2d canvas context
+ *
+ */
+
 
 const useCanvas = (
   draw: (ctx: CanvasRenderingContext2D) => void,
