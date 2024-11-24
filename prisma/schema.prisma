@@ -17,11 +17,11 @@ model User {
 }
 
 model Game {
-  id         String      @id @default(uuid())
-  userUserId String?
-  hostId     String
-  host       User        @relation("HostedGames", fields: [hostId], references: [id])
-  players    GameState[] @relation("GamePlayers")
+  id      String      @id @default(uuid())
+  user    String?
+  hostId  String
+  host    User        @relation("HostedGames", fields: [hostId], references: [id])
+  players GameState[] @relation("GamePlayers")
 }
 
 model GameState {

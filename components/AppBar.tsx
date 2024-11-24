@@ -60,7 +60,7 @@ export default function AppBar() {
 							<span className="sr-only">Toggle theme</span>
 						</Button>
 
-						{session.data?.user ? <Button variant="ghost" className="text-muted-foreground hidden md:inline-flex" onClick={() => signOut()}>
+						{session.data?.user ? <Button variant="ghost" className="text-muted-foreground hidden md:inline-flex" onClick={() => signOut({callbackUrl: "http://localhost:3000/"})}>
 							Sign Out
 						</Button> :
 							<Button variant="ghost" className="text-muted-foreground hidden md:inline-flex" onClick={() => signIn() }>

@@ -44,7 +44,7 @@ const BoardGame = ({ players }: { players: any }) => {
 			const ctx = canvasRef.current.getContext("2d");
 			if (ctx && board) {
 				board.players[curPlayer].move(ctx, value);
-				setCurPlayer(prev => (prev + 1) % players.length);
+				setCurPlayer(prev => (prev + 1) % board.players.length);
 			}
 		}
 	}

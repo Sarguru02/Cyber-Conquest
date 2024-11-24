@@ -2,13 +2,24 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input';
+import prisma from '@/lib/db';
 import { Plus, Users } from 'lucide-react'
+import { useSession } from 'next-auth/react';
 import React, { useState } from 'react'
 
 const page = () => {
 	const [gameCode, setGameCode] = useState('')
-	function createGame(){
+	const session = useSession();
+	async function createGame(){
 		console.log("Create game function is called")
+		const res = await fetch("/create", {
+			method: "POST", 
+		})
+		const data = await res.json();
+		// await prisma.game.create({data: {
+		// 	hostId: 
+		// }})
+		console.log(data);
 	}
 	return (
 		<div className="min-h-screen container mx-auto p-4 mt-8 w-1/2">
